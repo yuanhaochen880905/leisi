@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>产品展示中心</title>
+    <!-- 引入Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入Font Awesome图标 -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <!-- Tailwind配置 -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#F8F5F0", // 主色调-米白色
+              secondary: "#F3EDE5", // 辅色1-浅米色
+              accent: "#E8E2D9", // 辅色2-浅灰色
+              text: "#5C5550", // 文字色-柔和深灰
+            },
+            fontFamily: {
+              sans: ["Inter", "system-ui", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+
+    <style type="text/tailwindcss">
+      @layer utilities {
+        .content-auto {
+          content-visibility: auto;
+        }
+        .product-card {
+          @apply bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden cursor-pointer;
+        }
+        .btn-close {
+          @apply absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-secondary hover:bg-accent transition-colors text-text;
+        }
+        .category-btn {
+          @apply px-5 py-2 rounded-full text-sm md:text-base bg-white hover:bg-secondary transition-colors duration-200 font-medium;
+        }
+        .category-btn.active {
+          @apply bg-secondary text-[#4A443F] shadow-sm;
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-primary text-text min-h-screen">
+    <!-- 顶部介绍模块 -->
+    <header class="py-12 px-4 md:px-8 bg-secondary">
+      <div class="container mx-auto max-w-6xl text-center">
+        <h1 class="text-[clamp(1.8rem,4vw,3rem)] font-bold mb-4 text-[#4A443F]">
+          广州优玛 · Umart · 一店
+        </h1>
+        <p
+          class="text-lg md:text-xl max-w-3xl mx-auto opacity-90 leading-relaxed"
+        >
+          主营蕾丝,网布,珠片,专供二批
+        </p>
+      </div>
+    </header>
+
+    <!-- 产品展示模块 -->
+    <main class="py-16 px-4 md:px-8">
+      <div class="container mx-auto max-w-6xl">
+        <h2 class="text-2xl md:text-3xl font-semibold text-center mb-6">
+          精选产品
+        </h2>
+
+        <!-- ===================== 分类导航栏 ===================== -->
+        <div class="flex justify-center flex-wrap gap-3 mb-10">
+          <button class="category-btn active" onclick="filterProducts('all')">
+            全部产品
+          </button>
+          <button class="category-btn" onclick="filterProducts('leisi')">
+            蕾丝系列
+          </button>
+          <button class="category-btn" onclick="filterProducts('wangbu')">
+            网布系列
+          </button>
+          <button class="category-btn" onclick="filterProducts('zp')">
+            珠片系列
+          </button>
+        </div>
+
+        <!-- 产品网格：电脑端3列，手机端2列 -->
+        <div
+          id="productGrid"
+          class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-8"
+        >
+          <!-- 产品会由JS自动渲染 -->
+        </div>
+      </div>
+    </main>
+
+    <!-- 底部联系模块 -->
+    <footer class="bg-secondary py-10 px-4 md:px-8">
+      <div class="container mx-auto max-w-6xl">
+        <div
+          class="flex flex-col md:flex-row justify-between items-center gap-8 text-center md:text-left"
+        >
+          <!-- 左侧信息 -->
+          <div class="flex-1">
+            <h3 class="text-xl font-semibold mb-4">联系我们</h3>
+            <div class="space-y-2">
+              <p
+                class="flex items-center justify-center md:justify-start gap-2"
+              >
+                <i class="fa-solid fa-location-dot text-text/70"></i>
+                地址:中国 · 广州市南沙区环盛街2号2107室
+              </p>
+              <p
+                class="flex items-center justify-center md:justify-start gap-2"
+              >
+                <i class="fa-solid fa-phone text-text/70"></i>
+                电话:193 2054 6394
+              </p>
+              <p
+                class="flex items-center justify-center md:justify-start gap-2"
+              >
+                <i class="fa-solid fa-envelope text-text/70"></i>
+                邮箱:zumar@zumar.com.cn
+              </p>
+            </div>
+          </div>
+
+          <!-- 右侧微信 -->
+          <div class="flex flex-col items-center">
+            <h3 class="text-xl font-semibold mb-4">微信咨询</h3>
+            <div class="bg-white p-3 rounded-lg shadow-sm">
+              <img
+                src="https://yuanhaochen.oss-cn-guangzhou.aliyuncs.com/%E9%9E%8B%E5%AD%90/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20260407201112_190_12.png"
+                alt="微信二维码"
+                class="w-32 h-32 object-cover"
+              />
+            </div>
+            <p class="mt-2 text-sm">扫码添加微信客服</p>
+          </div>
+        </div>
+        <div
+          class="mt-8 pt-6 border-t border-accent text-center text-sm opacity-75"
+        >
+          © 2025 广州优玛商贸 | 工作时间 10:00-18:00
+        </div>
+      </div>
+    </footer>
+
+    <!-- 产品详情弹窗 -->
+    <div
+      id="productModal"
+      class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4"
+    >
+      <div
+        class="bg-primary rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto"
+      >
+        <button class="btn-close" onclick="closeProductModal()">
+          <i class="fa-solid fa-xmark text-xl"></i>
+        </button>
+
+        <div class="p-6 md:p-8" id="modalContent">
+          <!-- 弹窗内容由JS动态生成 -->
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // 产品数据（新增分类字段 category）
+      const products = [
+        {
+          id: 1,
+          title: "",
+          category: "leisi", // 分类
+          desc: "",
+          images: [
+            "https://yuanhaochen.oss-cn-guangzhou.aliyuncs.com/%E9%9E%8B%E5%AD%90/dacbc49d6cd78f7355712c40992fc063.jpg",
+          ],
+        },
+        {
+          id: 2,
+          title: "",
+          category: "leisi",
+          desc: "",
+          images: [
+            "https://yuanhaochen.oss-cn-guangzhou.aliyuncs.com/%E9%9E%8B%E5%AD%90/4e992ae8228b7adcf9be8e0a0ad01d13.jpg",
+          ],
+        },
+        {
+          id: 3,
+          title: "",
+          category: "leisi",
+          desc: "",
+          images: [
+            "https://yuanhaochen.oss-cn-guangzhou.aliyuncs.com/%E9%9E%8B%E5%AD%90/a424d6674e8143481641f5f5dd52c1fc.jpg",
+          ],
+        },
+        {
+          id: 4,
+          title: "",
+          category: "leisi", // 分类
+          desc: "",
+          images: [
+            "https://yuanhaochen.oss-cn-guangzhou.aliyuncs.com/%E9%9E%8B%E5%AD%90/23e920be2c691fd5bf097e5d71aea690.jpg",
+          ],
+        },
+        {
+          id: 5,
+          title: "",
+          category: "leisi",
+          desc: "",
+          images: [
+            "https://yuanhaochen.oss-cn-guangzhou.aliyuncs.com/%E9%9E%8B%E5%AD%90/586ec0a7fa25d184921006a743aa1bc5.jpg",
+          ],
+        },
+        {
+          id: 6,
+          title: "",
+          category: "leisi",
+          desc: "",
+          images: [
+            "https://yuanhaochen.oss-cn-guangzhou.aliyuncs.com/%E9%9E%8B%E5%AD%90/7e1b171a6867cbeda5ce1c8c437e6146.jpg",
+          ],
+        },
+        {
+          id: 7,
+          title: "",
+          category: "leisi", // 分类
+          desc: "",
+          images: [
+            "https://yuanhaochen.oss-cn-guangzhou.aliyuncs.com/%E9%9E%8B%E5%AD%90/c882f72d23c46155984b7e6091e8cbde.jpg",
+          ],
+        },
+        {
+          id: 8,
+          title: "",
+          category: "leisi",
+          desc: "",
+          images: [
+            "https://yuanhaochen.oss-cn-guangzhou.aliyuncs.com/%E9%9E%8B%E5%AD%90/ac5f0179308b694f166ec4b46298a2a2.jpg",
+          ],
+        },
+        {
+          id: 9,
+          title: "",
+          category: "wangbu",
+          desc: "",
+          images: [
+            "https://yuanhaochen.oss-cn-guangzhou.aliyuncs.com/%E9%9E%8B%E5%AD%90/9835f5f513b929bb5f60456b114488da.jpg",
+          ],
+        },
+        {
+          id: 10,
+          title: "",
+          category: "leisi", // 分类
+          desc: "",
+          images: [
+            "https://yuanhaochen.oss-cn-guangzhou.aliyuncs.com/%E9%9E%8B%E5%AD%90/baed28f35736546cbb2d4c7204a0eb30.jpg",
+          ],
+        },
+        {
+          id: 11,
+          title: "",
+          category: "leisi",
+          desc: "",
+          images: [
+            "https://yuanhaochen.oss-cn-guangzhou.aliyuncs.com/%E9%9E%8B%E5%AD%90/0fa0ce251319cfed06309a1d633061fd.jpg",
+          ],
+        },
+        {
+          id: 12,
+          title: "",
+          category: "leisi",
+          desc: "",
+          images: [
+            "https://yuanhaochen.oss-cn-guangzhou.aliyuncs.com/%E9%9E%8B%E5%AD%90/7b4093668e17b538d528f8bd9b5ff533.jpg",
+          ],
+        },
+        {
+          id: 13,
+          title: "",
+          category: "leisi", // 分类
+          desc: "",
+          images: [
+            "https://yuanhaochen.oss-cn-guangzhou.aliyuncs.com/%E9%9E%8B%E5%AD%90/bbb88e07fa585e88ffef2ef602d8910a.jpg",
+          ],
+        },
+        {
+          id: 14,
+          title: "",
+          category: "leisi",
+          desc: "",
+          images: [
+            "https://yuanhaochen.oss-cn-guangzhou.aliyuncs.com/%E9%9E%8B%E5%AD%90/c79ce4a976b3c1b146e96873eb56bf10.jpg",
+          ],
+        },
+        {
+          id: 15,
+          title: "",
+          category: "zp",
+          desc: "",
+          images: [
+            "https://yuanhaochen.oss-cn-guangzhou.aliyuncs.com/%E9%9E%8B%E5%AD%90/f52128b3e5cbb71edef72b11911bcefe.jpg",
+          ],
+        },
+        {
+          id: 16,
+          title: "",
+          category: "wangbu", // 分类
+          desc: "",
+          images: [
+            "https://yuanhaochen.oss-cn-guangzhou.aliyuncs.com/%E9%9E%8B%E5%AD%90/8cfe7877c7e754e970918a4e182a103d.jpg",
+          ],
+        },
+        {
+          id: 17,
+          title: "",
+          category: "wangbu",
+          desc: "",
+          images: [
+            "https://yuanhaochen.oss-cn-guangzhou.aliyuncs.com/%E9%9E%8B%E5%AD%90/4da276682af03ea2a47bf13da550c6ff.jpg",
+          ],
+        },
+        {
+          id: 18,
+          title: "",
+          category: "wangbu",
+          desc: "",
+          images: [
+            "https://yuanhaochen.oss-cn-guangzhou.aliyuncs.com/%E9%9E%8B%E5%AD%90/632f91629a0bc0cc8f5180a3c2d799d2.jpg",
+          ],
+        },
+        {
+          id: 19,
+          title: "",
+          category: "leisi",
+          desc: "",
+          images: [
+            "https://yuanhaochen.oss-cn-guangzhou.aliyuncs.com/%E9%9E%8B%E5%AD%90/27a9fabc6f304fcb0cf51d28095490e2.jpg",
+          ],
+        },
+        {
+          id: 20,
+          title: "",
+          category: "wangbu",
+          desc: "",
+          images: [
+            "https://yuanhaochen.oss-cn-guangzhou.aliyuncs.com/%E9%9E%8B%E5%AD%90/d8a359922ab6590bfde78ce69238edf3.jpg",
+          ],
+        },
+      ];
+
+      // 初始化页面：渲染所有产品
+      window.onload = function () {
+        renderProducts(products);
+      };
+
+      // 渲染产品到页面
+      function renderProducts(productsToRender) {
+        const grid = document.getElementById("productGrid");
+        let html = "";
+
+        productsToRender.forEach((product) => {
+          html += `
+                <div class="product-card" onclick="openProductModal(${product.id})">
+                    <div class="h-48 overflow-hidden">
+                        <img src="${product.images[0]}" alt="产品图片" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold mb-2">${product.title}</h3>
+                        <p class="text-sm opacity-85 line-clamp-2">${product.desc}</p>
+                    </div>
+                </div>`;
+        });
+
+        grid.innerHTML = html;
+      }
+
+      // 分类筛选功能
+      function filterProducts(category) {
+        // 切换按钮高亮
+        document.querySelectorAll(".category-btn").forEach((btn) => {
+          btn.classList.remove("active");
+        });
+        event.target.classList.add("active");
+
+        // 筛选产品
+        if (category === "all") {
+          renderProducts(products);
+        } else {
+          const filtered = products.filter(
+            (item) => item.category === category,
+          );
+          renderProducts(filtered);
+        }
+      }
+    </script>
+  </body>
+</html>
